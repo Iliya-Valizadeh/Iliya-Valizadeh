@@ -24,7 +24,7 @@ PostgreSQL Functions · Joining Data with pandas · AWS concepts (x3) · Google 
 Data, Data, Everywhere
 
 ## Currently
-Open to part-time data/analytics work (Toronto) and Summer 2027 data science /
-analytics internships.
+Seeking Fall 2026 / Winter 2027 data & analytics roles (Toronto) — internships,
+part-time, and early-career.
 
-📫 iliyavalizadeh60@gmail.com · [LinkedIn](https://www.linkedin.com/in/iliya-v-1656b1337)
+📫 iliyavalizadeh60@gmail.com · [LinkedIn](https://www.linkedin.com/in/iliya-valizadeh)
