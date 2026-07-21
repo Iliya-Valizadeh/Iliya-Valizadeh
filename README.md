@@ -1,30 +1,27 @@
 # Iliya Valizadeh
 
-Data Science student at York University (BSc, class of 2028) in Toronto, building data
-projects the way banks actually run them: measured, explainable, and shipped.
+Data science student at York University in Toronto (BSc, 2028). I build projects the way
+a bank team would have to run them, which mostly means measuring things before claiming them.
 
 ## Projects
 
-| Project | What it shows | Headline result |
+| Project | What it is | Result |
 |---|---|---|
-| [credit-risk-scorecard](https://github.com/Iliya-Valizadeh/credit-risk-scorecard) | End-to-end credit default model: pandas/PostgreSQL pipeline, class-weighted logistic regression + LightGBM, threshold economics, SHAP, calibration, and a bank-style model-risk write-up | Validation ROC-AUC 0.74 on a ~1:11 imbalanced portfolio |
-| [bank-filings-rag](https://github.com/Iliya-Valizadeh/bank-filings-rag) | Retrieval-augmented Q&A over RBC's 2024 annual report: local embeddings + FAISS, page-cited fail-closed answers, and an evaluation harness (gold Q&A, hit@k, MRR) | Page-level chunking retrieves 4x better than fixed-word windows |
+| [credit-risk-scorecard](https://github.com/Iliya-Valizadeh/credit-risk-scorecard) | Credit-default model on 300K+ applications: pandas/PostgreSQL pipeline, class-weighted logistic regression and LightGBM, threshold analysis, calibration check, SHAP, plus a short model-risk memo | 0.74 validation ROC-AUC on a ~1:11 imbalanced portfolio |
+| [bank-filings-rag](https://github.com/Iliya-Valizadeh/bank-filings-rag) | Q&A over RBC's 2024 annual report. Local embeddings + FAISS, every answer cites its page, and the system says so when the report has no answer. Includes a gold Q&A set and retrieval metrics (hit@k, MRR) | Page-level chunking retrieves the right page 4x more often than fixed windows (hit@5 0.40 vs 0.10) |
 
-Every number in these repos was produced by code in them — nothing is claimed that
-wasn't measured.
+The numbers above come from code in the repos. If a metric isn't in the code, I don't report it.
 
-## Skills I can defend
-Python (pandas, NumPy, scikit-learn, LightGBM), SQL / PostgreSQL, EDA & data cleaning,
-statistics fundamentals, SHAP explainability, matplotlib/seaborn,
-sentence-transformers / FAISS (RAG), Git, AWS concepts.
+## Skills
+Python (pandas, NumPy, scikit-learn, LightGBM), SQL and PostgreSQL, EDA and data cleaning,
+statistics, SHAP, matplotlib/seaborn, sentence-transformers and FAISS, Git, AWS basics.
 
 ## Certifications
-DataCamp Associate Data Scientist (assessed) · SQL Fundamentals track · Database Design ·
-PostgreSQL Functions · Joining Data with pandas · AWS concepts (x3) · Google Foundations:
-Data, Data, Everywhere
+DataCamp Associate Data Scientist (assessed), 2026 · SQL Fundamentals track · Database Design ·
+PostgreSQL Functions · Joining Data with pandas · 3 AWS concept courses · Google "Foundations: Data, Data, Everywhere"
 
 ## Currently
-Seeking Fall 2026 / Winter 2027 data & analytics roles (Toronto) — internships,
-part-time, and early-career.
+Looking for part-time or junior data/analytics work in Toronto (fall 2026), then co-op or
+internship terms in 2027.
 
-📫 iliyavalizadeh60@gmail.com · [LinkedIn](https://www.linkedin.com/in/iliya-valizadeh)
+iliyavalizadeh60@gmail.com · [LinkedIn](https://www.linkedin.com/in/iliya-valizadeh)
