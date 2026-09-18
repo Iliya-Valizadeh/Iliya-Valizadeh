@@ -1,27 +1,29 @@
 # Iliya Valizadeh
 
-Data science student at York University in Toronto (BSc, 2028). I build projects the way
-a bank team would have to run them, which mostly means measuring things before claiming them.
+Third-year Data Science student at York University in Toronto, BSc expected 2028.
+I build projects end to end and measure them before claiming anything about them.
+
+**Looking for a Winter 2027 data science or analytics co-op**, January to August 2027.
 
 ## Projects
 
-| Project | What it is | Result |
+| Project | What it is | Measured result |
 |---|---|---|
-| [credit-risk-scorecard](https://github.com/Iliya-Valizadeh/credit-risk-scorecard) | Credit-default model on 300K+ applications: pandas/PostgreSQL pipeline, class-weighted logistic regression and LightGBM, threshold analysis, calibration check, SHAP, plus a short model-risk memo | 0.74 validation ROC-AUC on a ~1:11 imbalanced portfolio |
-| [bank-filings-rag](https://github.com/Iliya-Valizadeh/bank-filings-rag) | Q&A over RBC's 2024 annual report. Local embeddings + FAISS, every answer cites its page, and the system says so when the report has no answer. Includes a gold Q&A set and retrieval metrics (hit@k, MRR) | Page-level chunking retrieves the right page 4x more often than fixed windows (hit@5 0.40 vs 0.10) |
+| [bank-filings-rag](https://github.com/Iliya-Valizadeh/bank-filings-rag) | Retrieval-augmented Q&A over RBC's 250-page 2024 annual report. Embeddings run locally so the filing never leaves the machine, every answer cites its source page, and generation is fail-closed when the retrieved evidence does not support an answer. The core of it is the evaluation harness: a hand-labelled gold set scored on hit@k and MRR, run identically across three chunking strategies. | Whole-page chunking retrieves the correct page 4x as often as fixed 180-word windows: hit@5 0.40 vs 0.10, MRR 0.27 vs 0.10 |
+| [credit-risk-scorecard](https://github.com/Iliya-Valizadeh/credit-risk-scorecard) | Credit-default model on the Home Credit dataset. SQL feature pipeline in PostgreSQL, LightGBM against a class-weighted logistic baseline, then approval-threshold analysis, a calibration diagnosis traced back to class weighting, SHAP attribution, and a bank-style model-risk write-up. | LightGBM 0.736 validation ROC-AUC against a logistic baseline at 0.734, on a 17,000-row sample with a 7.85% base default rate |
 
-The numbers above come from code in the repos. If a metric isn't in the code, I don't report it.
+Both repos state their own limitations. The numbers above come from code in the repos.
+If a metric isn't in the code, I don't report it.
 
-## Skills
-Python (pandas, NumPy, scikit-learn, LightGBM), SQL and PostgreSQL, EDA and data cleaning,
-statistics, SHAP, matplotlib/seaborn, sentence-transformers and FAISS, Git, AWS basics.
+## Tools
 
-## Certifications
-DataCamp Associate Data Scientist (assessed), 2026 · SQL Fundamentals track · Database Design ·
-PostgreSQL Functions · Joining Data with pandas · 3 AWS concept courses · Google "Foundations: Data, Data, Everywhere"
+Python (pandas, NumPy, scikit-learn, LightGBM), SQL and PostgreSQL, sentence-transformers
+and FAISS, FastAPI, SHAP, matplotlib and seaborn, Tableau, Power BI, Git.
 
-## Currently
-Looking for part-time or junior data/analytics work in Toronto (fall 2026), then co-op or
-internship terms in 2027.
+## Also
 
-iliyavalizadeh60@gmail.com · [LinkedIn](https://www.linkedin.com/in/iliya-valizadeh)
+Sponsor prize winner, Federato challenge, Hack the North 2026 ·
+DataCamp Associate Data Scientist (assessed), 2026 ·
+Co-president, York University Data Science Community
+
+iliyavalizadeh60@gmail.com · [LinkedIn](https://www.linkedin.com/in/iliya-valizadeh) · [iliya-valizadeh.github.io](https://iliya-valizadeh.github.io)
