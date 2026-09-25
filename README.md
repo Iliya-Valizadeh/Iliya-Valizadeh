@@ -22,20 +22,19 @@ too wide to rank the setups. The repo says so up front.
 ## [credit-risk-scorecard](https://github.com/Iliya-Valizadeh/credit-risk-scorecard)
 
 A credit default model on the public Home Credit dataset, trained on all 307,511
-applications: LightGBM at 0.770 ROC-AUC against a logistic regression baseline at 0.755.
-A paired bootstrap puts the gap at 0.012 to 0.019.
+applications. LightGBM reaches 0.769 ROC-AUC against 0.752 for a logistic regression
+baseline, and a paired bootstrap puts the gap at 0.013 to 0.020.
 
 The model score is the smaller half of it. The class weighting I added made the average
-predicted default rate 39% when the real rate is 8%. Calibrating on held-out data brought
-it to 8.0% and cut the Brier score by 64%. I also mapped defaulters caught against good
-customers declined at each cut-off, added an illustrative expected-loss check, and looked
-at how declines fall by gender and age. The gaps it found are in the repo, along with the
-other limitations.
+predicted default rate 40% when the real rate is 8%. Calibrating on held-out data brought
+it to 8.0% and cut the Brier score by 64%. I also took gender out of the model and
+measured what changed. The gap in declines between men and women narrowed but didn't
+close, because other inputs still carry gender, and the repo names them.
 
 ## Tools
 
 Python (pandas, NumPy, scikit-learn, LightGBM), SQL and PostgreSQL, sentence-transformers
-and FAISS, FastAPI, SHAP, matplotlib and seaborn, Tableau, Power BI, Git.
+and FAISS, SHAP, matplotlib and seaborn, Tableau, Power BI, Git.
 
 ## Also
 
