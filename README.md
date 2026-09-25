@@ -16,7 +16,7 @@ Most of the work went into measuring it. I built a 30-question answer key and co
 three ways of splitting the report against three ways of searching it, with bootstrap
 intervals and a write-up of every miss. The best setup, whole pages searched by meaning
 and by keyword together, found the right page in the top five for 21 of 30 questions.
-Only 10 of those questions are checked by hand so far, and on those 10 the intervals are
+Only 12 of those questions are checked by hand so far, and on those 12 the intervals are
 too wide to rank the setups. The repo says so up front.
 
 ## [credit-risk-scorecard](https://github.com/Iliya-Valizadeh/credit-risk-scorecard)
