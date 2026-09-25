@@ -8,35 +8,33 @@ metric isn't in the code I don't report it.
 
 ## [bank-filings-rag](https://github.com/Iliya-Valizadeh/bank-filings-rag)
 
-Ask a question about RBC's 2024 Annual Report and get an answer back with the page it
-came from. The report runs to 250 pages. The text is turned into vectors on my own
-machine rather than sent to a hosted API, so the same design would still work on a
-document a bank could not send outside. When the pages it pulled do not contain the
-answer, it says so instead of guessing.
+Ask a question about RBC's 2024 Annual Report (250 pages) and get an answer back with
+the page it came from. The text is turned into vectors on my own machine rather than
+sent to a hosted API, and when the pages it pulled don't contain the answer, it says so.
 
-The testing is where most of the work went. I wrote an answer key by hand, with the true
-page for each question, and used it to compare three ways of splitting the report.
-Splitting it one page at a time found the right page in the top five 4 times out of 10,
-against 1 time out of 10 for fixed 180-word chunks. The answer key is only 10 questions,
-so that points in a direction rather than settling anything, and the repo says as much.
+Most of the work went into measuring it. I built a 30-question answer key and compared
+three ways of splitting the report against three ways of searching it, with bootstrap
+intervals and a write-up of every miss. The best setup, whole pages searched by meaning
+and by keyword together, found the right page in the top five for 21 of 30 questions.
+Only 10 of those questions are checked by hand so far, and on those 10 the intervals are
+too wide to rank the setups. The repo says so up front.
 
 ## [credit-risk-scorecard](https://github.com/Iliya-Valizadeh/credit-risk-scorecard)
 
-A credit default model on the public Home Credit dataset. Feature pipeline in SQL on
-PostgreSQL, then LightGBM at 0.736 ROC-AUC against a logistic regression baseline at
-0.734, trained on a 17,000-row sample in which 7.85% of applicants defaulted.
+A credit default model on the public Home Credit dataset, trained on all 307,511
+applications. LightGBM reaches 0.769 ROC-AUC against 0.752 for a logistic regression
+baseline, and a paired bootstrap puts the gap at 0.013 to 0.020.
 
-The model score is the smaller half of it. I mapped how many real defaulters you catch
-against how many good customers you turn away at each cut-off, found my predicted
-probabilities were overstated and traced that back to the class weighting I had added
-myself, used SHAP to check which features the model was leaning on, and wrote up the
-intended use, the failure modes and when it would need retraining. The limitations are
-listed in the repo, including the ones that are not flattering.
+The model score is the smaller half of it. The class weighting I added made the average
+predicted default rate 40% when the real rate is 8%. Calibrating on held-out data brought
+it to 8.0% and cut the Brier score by 64%. I also took gender out of the model and
+measured what changed. The gap in declines between men and women narrowed but didn't
+close, because other inputs still carry gender, and the repo names them.
 
 ## Tools
 
 Python (pandas, NumPy, scikit-learn, LightGBM), SQL and PostgreSQL, sentence-transformers
-and FAISS, FastAPI, SHAP, matplotlib and seaborn, Tableau, Power BI, Git.
+and FAISS, SHAP, matplotlib and seaborn, Tableau, Power BI, Git.
 
 ## Also
 
