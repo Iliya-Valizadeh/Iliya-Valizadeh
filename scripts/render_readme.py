@@ -47,7 +47,10 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 GITHUB_USER = "Iliya-Valizadeh"
 PLACEHOLDER_RE = re.compile(r"\{\{\s*([a-zA-Z0-9_.]+)\s*\}\}")
-VALUE_NUMBER_RE = re.compile(r"-?\d+(?:\.\d+)?%?")
+# A "-" counts as a minus sign only when no digit comes right before it, so a range
+# written "0.762-0.775" reads as 0.762 and 0.775, the way tools/claims_check.py reads
+# it, while "; -0.20" still reads as a negative number.
+VALUE_NUMBER_RE = re.compile(r"(?:(?<![\d.])-)?\d+(?:\.\d+)?%?")
 SOURCES_LINE_RE = re.compile(r"^\s*-\s*`([\w.-]+)`\s+at\s+`([0-9a-f]{7,40})`")
 
 
