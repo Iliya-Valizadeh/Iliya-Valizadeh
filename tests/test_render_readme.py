@@ -104,6 +104,20 @@ def test_value_cell_matches_percent_form() -> None:
     assert rr.value_cell_matches("58%", "58%", config)
 
 
+def test_value_cell_matches_both_ends_of_a_hyphen_range() -> None:
+    """A range such as 0.762-0.775 holds 0.762 and 0.775, as tools/claims_check.py reads it."""
+    config = rr.NumberConfig(id="x", path="x", row="x", decimals=3, percent=False, thousands=False)
+    assert rr.value_cell_matches("0.769 (0.762-0.775)", "0.762", config)
+    assert rr.value_cell_matches("0.769 (0.762-0.775)", "0.775", config)
+    assert not rr.value_cell_matches("0.769 (0.762-0.775)", "-0.775", config)
+
+
+def test_value_cell_matches_a_real_negative_number() -> None:
+    config = rr.NumberConfig(id="x", path="x", row="x", decimals=2, percent=False, thousands=False)
+    assert rr.value_cell_matches("3; -0.20; 9", "-0.20", config)
+    assert not rr.value_cell_matches("3; -0.20; 9", "0.20", config)
+
+
 # --- json_value ------------------------------------------------------------------------
 
 
