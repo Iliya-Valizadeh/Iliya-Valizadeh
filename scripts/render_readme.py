@@ -350,14 +350,17 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if readme_changed:
-        readme_path.write_text(rendered, encoding="utf-8")
+        # newline="\n" so this write is bytes-for-bytes the same on every platform,
+        # rather than relying on .gitattributes to fix it up after the fact. The
+        # Hack the North guard depends on that (ADR 0004).
+        readme_path.write_text(rendered, encoding="utf-8", newline="\n")
         print("wrote README.md")
     else:
         print("README.md already up to date, not written")
 
     if sources_changed:
         sources_path.parent.mkdir(parents=True, exist_ok=True)
-        sources_path.write_text(sources_text, encoding="utf-8")
+        sources_path.write_text(sources_text, encoding="utf-8", newline="\n")
         print("wrote data/sources.json")
     else:
         print("data/sources.json already up to date, not written")
