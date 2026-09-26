@@ -1,52 +1,216 @@
-# Config for scripts/render_readme.py, per docs/decisions/0001 and 0002.
+# Config for scripts/render_readme.py, per docs/decisions/0001, 0002 and 0003.
 #
-# Each [[project]] is one source repo. Each of its [[project.number]] entries is
-# one number README.template.md is allowed to show as "{{ id }}". Before it renders,
-# the script checks that repo's own CLAIMS.md, at the same commit as metrics_file,
-# has a row named `row` that covers `path` and whose Value cell holds the formatted
-# number. If the check fails, nothing is written.
+# Each [[project]] is one row of the project table, in this order (ADR 0003). The
+# template's "{{ project_table }}" line becomes the table. `what`, `finding` and
+# `headline` are the row's words. `headline` may use the number placeholders defined
+# under that project. A repo with no reports/metrics.json sets `metrics = false`: it
+# has no metrics_file, no headline and no numbers, and its row shows no number.
 #
-# The renderer also fails if a number defined here is never used by the template, or
-# if the template uses a placeholder not defined here (ADR 0001).
+# Each [[project.number]] is one number the README may show as "{{ id }}". Before it
+# renders, the script checks that repo's own CLAIMS.md, at the same commit as
+# metrics_file, has a row named `row` that covers `path` and whose Value cell holds
+# the formatted number. If the check fails, nothing is written. A number measured on
+# made-up data sets `synthetic = true`, and must then sit on a line that says
+# "synthetic".
 #
-# At this stage (the "profile renderer" task) the template still reproduces today's
-# README text exactly, so only the two numbers that text already shows in a form
-# ADR 0002 backs are listed. The rest of today's numbers (the annual report's page
-# count, "21 of 30", the class-weighting percentages, the Brier score cut) have no
-# row that covers them the way they are worded, or aren't the number ADR 0002 picked
-# for this repo, and stay as plain typed text until the content task (ADR 0002,
-# "Today's README has three numbers that no source row backs") rewords them. The
-# five-row project table ADR 0003 describes does not exist in the template yet, so
-# `second-look`, `ds-project-standard` and `.github` have no entry here yet either.
+# The renderer also fails if a number defined here is never used, or if the template
+# or a headline uses a placeholder not defined here (ADR 0001).
 
 [[project]]
 repo = "credit-risk-scorecard"
 metrics_file = "reports/metrics.json"
+what = """
+A model that ranks loan applicants by the risk that they miss payments, then turns
+that score into a probability. It uses the public Home Credit data from Kaggle.
+"""
+finding = """
+The class weighting I chose made the raw probabilities far too high. Calibrating on
+held-out data fixed them and left the ranking almost the same. Taking gender out of
+the model narrowed the gap in declines between men and women, but did not close it,
+because other inputs still carry gender.
+"""
+headline = """
+How well it ranks risky applicants above safe ones
+([ROC-AUC](https://github.com/Iliya-Valizadeh/credit-risk-scorecard/blob/main/docs/glossary.md#roc-auc)):
+{{ credit_risk_scorecard.lightgbm_roc_auc }} (interval
+{{ credit_risk_scorecard.lightgbm_roc_auc_lo }} to {{ credit_risk_scorecard.lightgbm_roc_auc_hi }}),
+against {{ credit_risk_scorecard.logreg_roc_auc }} for a logistic regression baseline
+"""
 
 [[project.number]]
 id = "credit_risk_scorecard.lightgbm_roc_auc"
 path = "models.lightgbm.roc_auc"
 row = "[ROC-AUC](docs/glossary.md#roc-auc) and [PR-AUC](docs/glossary.md#pr-auc) by model, with 95% intervals"
 decimals = 3
-percent = false
-thousands = false
+
+[[project.number]]
+id = "credit_risk_scorecard.lightgbm_roc_auc_lo"
+path = "bootstrap.roc_auc.lightgbm.lo"
+row = "[ROC-AUC](docs/glossary.md#roc-auc) and [PR-AUC](docs/glossary.md#pr-auc) by model, with 95% intervals"
+decimals = 3
+
+[[project.number]]
+id = "credit_risk_scorecard.lightgbm_roc_auc_hi"
+path = "bootstrap.roc_auc.lightgbm.hi"
+row = "[ROC-AUC](docs/glossary.md#roc-auc) and [PR-AUC](docs/glossary.md#pr-auc) by model, with 95% intervals"
+decimals = 3
 
 [[project.number]]
 id = "credit_risk_scorecard.logreg_roc_auc"
 path = "models.logreg.roc_auc"
 row = "[ROC-AUC](docs/glossary.md#roc-auc) and [PR-AUC](docs/glossary.md#pr-auc) by model, with 95% intervals"
 decimals = 3
-percent = false
-thousands = false
 
 [[project]]
 repo = "bank-filings-rag"
 metrics_file = "reports/metrics.json"
+what = """
+Answers questions about RBC's 2024 Annual Report and names the page each answer came
+from. The text is turned into vectors on my own machine, not sent to a hosted service.
+"""
+finding = """
+The model that turns text into vectors reads only the start of each page, and most
+pages are much longer than that. So search by meaning over whole pages mostly sees the
+top of each page. A model that reads more could change which setup wins.
+"""
+headline = """
+How often the right page is in the top five
+([hit@5](https://github.com/Iliya-Valizadeh/bank-filings-rag/blob/main/docs/glossary.md#hit5)):
+{{ bank_filings_rag.hit5 }} ({{ bank_filings_rag.interval_level }} interval {{ bank_filings_rag.hit5_lo }} to
+{{ bank_filings_rag.hit5_hi }}) on {{ bank_filings_rag.n_verified }} hand-checked
+questions, against {{ bank_filings_rag.baseline_hit5 }}
+({{ bank_filings_rag.baseline_hit5_lo }} to {{ bank_filings_rag.baseline_hit5_hi }})
+for fixed-size chunks. The intervals overlap, so no setup clearly wins yet
+"""
+
+[[project.number]]
+id = "bank_filings_rag.hit5"
+path = "headline.model.value"
+row = "Headline [hit@5](docs/glossary.md#hit5), whole pages + hybrid, 12 questions, with its 95% interval"
+decimals = 2
+
+[[project.number]]
+id = "bank_filings_rag.hit5_lo"
+path = "headline.model.ci_low"
+row = "Headline [hit@5](docs/glossary.md#hit5), whole pages + hybrid, 12 questions, with its 95% interval"
+decimals = 2
+
+[[project.number]]
+id = "bank_filings_rag.hit5_hi"
+path = "headline.model.ci_high"
+row = "Headline [hit@5](docs/glossary.md#hit5), whole pages + hybrid, 12 questions, with its 95% interval"
+decimals = 2
+
+[[project.number]]
+id = "bank_filings_rag.baseline_hit5"
+path = "headline.baseline.value"
+row = "[Baseline](docs/glossary.md#baseline) hit@5, fixed chunks + dense, 12 questions, with its 95% interval"
+decimals = 2
+
+[[project.number]]
+id = "bank_filings_rag.baseline_hit5_lo"
+path = "headline.baseline.ci_low"
+row = "[Baseline](docs/glossary.md#baseline) hit@5, fixed chunks + dense, 12 questions, with its 95% interval"
+decimals = 2
+
+[[project.number]]
+id = "bank_filings_rag.baseline_hit5_hi"
+path = "headline.baseline.ci_high"
+row = "[Baseline](docs/glossary.md#baseline) hit@5, fixed chunks + dense, 12 questions, with its 95% interval"
+decimals = 2
+
+[[project.number]]
+id = "bank_filings_rag.interval_level"
+path = "interval.level"
+row = "Confidence level for every interval"
+decimals = 0
+percent = true
 
 [[project.number]]
 id = "bank_filings_rag.n_verified"
 path = "n_questions.verified"
 row = "Hand-checked questions"
 decimals = 0
-percent = false
-thousands = false
+
+[[project]]
+repo = "second-look"
+metrics_file = "reports/metrics.json"
+what = """
+Reads a bank or card statement in your browser and flags charges worth a second look:
+subscriptions, price rises, double charges and odd spending. Each flag comes with one
+plain sentence.
+"""
+finding = """
+It failed the bar I set before I saw any result. After two fixes, two checks still
+fall short, including the share of recurring flags that are right. The repo reports
+that instead of moving the bar.
+"""
+headline = """
+Share of planted recurring charges it finds
+([recall](https://github.com/Iliya-Valizadeh/second-look/blob/main/docs/glossary.md#recall)),
+on synthetic statements only: {{ second_look.recurring_recall }}
+({{ second_look.interval_level }} interval
+{{ second_look.recurring_recall_lo }} to {{ second_look.recurring_recall_hi }}), against
+{{ second_look.baseline_recurring_recall }} for a simple baseline
+"""
+
+[[project.number]]
+id = "second_look.recurring_recall"
+path = "engine.recurring.recall.value"
+row = "Recurring recall"
+decimals = 4
+synthetic = true
+
+[[project.number]]
+id = "second_look.recurring_recall_lo"
+path = "engine.recurring.recall.ci_low"
+row = "Recurring recall"
+decimals = 4
+synthetic = true
+
+[[project.number]]
+id = "second_look.recurring_recall_hi"
+path = "engine.recurring.recall.ci_high"
+row = "Recurring recall"
+decimals = 4
+synthetic = true
+
+[[project.number]]
+id = "second_look.interval_level"
+path = "interval.level"
+row = "Interval level"
+decimals = 0
+percent = true
+synthetic = true
+
+[[project.number]]
+id = "second_look.baseline_recurring_recall"
+path = "baseline.recurring.recall.value"
+row = "Baseline recurring precision and recall"
+decimals = 4
+synthetic = true
+
+[[project]]
+repo = "ds-project-standard"
+metrics = false
+what = """
+A Copier template that gives each new data science repo the same docs, tests and CI
+checks. A build stops when a number has no source, a page is hard to read, or a link
+is broken.
+"""
+finding = """
+It scores itself zero overall on the ML Test Score, a published checklist of how ready
+a system is for real use. The score page says why.
+"""
+
+[[project]]
+repo = ".github"
+metrics = false
+what = """
+Shared issue forms, a pull request checklist and a security policy. GitHub uses them
+for any of my repos that has no copy of its own.
+"""
+finding = """
+GitHub does not share a license from this repo the way it shares the forms, so each
+repo keeps its own license file.
+"""
