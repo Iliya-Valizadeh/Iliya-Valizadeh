@@ -9,6 +9,5 @@ here; nothing else in the tests needs to change unless the file's shape changed 
 - `bank-filings-rag` at `45246f8af21e907912d5611ccadb9158315255a3`: `reports/metrics.json` and `CLAIMS.md`
 - `second-look` at `0da821d9af2c15782d4e60abfd54572c1d34d0be`: `reports/metrics.json` and `CLAIMS.md`
 
-`second-look`'s fixture is not used by `projects.toml` yet (README.template.md does
-not show a second-look number at this stage), but is copied now per the plan in ADR
-0002's Consequences, so the content task does not need a fresh copy.
+All three are used by `projects.toml`. `ds-project-standard` and `.github` have no
+fixture, because they have no `reports/metrics.json` and the renderer never reads them.

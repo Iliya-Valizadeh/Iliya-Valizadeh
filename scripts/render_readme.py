@@ -18,6 +18,13 @@ docs/decisions/0002-where-each-number-comes-from.md:
   fails, the script writes nothing and exits with an error.
 - It fails, too, if the template uses a placeholder no entry in `projects.toml`
   defines, or if `projects.toml` defines a number the template never shows.
+- A `{{ project_table }}` line in the template becomes one table row per
+  `[[project]]` entry, in config order (ADR 0003). Each row's words come from that
+  entry's `what`, `finding` and `headline`; `headline` may hold number placeholders.
+  An entry with `metrics = false` has no metrics file, may not define numbers, and
+  its row shows no number (ADR 0002).
+- A number marked `synthetic = true` may only appear on a line that also says
+  "synthetic" (ADR 0002).
 - `README.md` is written only if the rendered text differs from what's already
   there. `data/sources.json` is written with the commit used for every source repo,
   so any shown number can be traced by hand.
@@ -51,6 +58,8 @@ PLACEHOLDER_RE = re.compile(r"\{\{\s*([a-zA-Z0-9_.]+)\s*\}\}")
 # written "0.762-0.775" reads as 0.762 and 0.775, the way tools/claims_check.py reads
 # it, while "; -0.20" still reads as a negative number.
 VALUE_NUMBER_RE = re.compile(r"(?:(?<![\d.])-)?\d+(?:\.\d+)?%?")
+TABLE_TOKEN = "{{ project_table }}"
+NO_NUMBER_TEXT = "None. It holds rules and templates, not a model"
 SOURCES_LINE_RE = re.compile(r"^\s*-\s*`([\w.-]+)`\s+at\s+`([0-9a-f]{7,40})`")
 
 
@@ -66,6 +75,7 @@ class NumberConfig:
     decimals: int
     percent: bool
     thousands: bool
+    synthetic: bool = False
 
 
 @dataclass(frozen=True)
@@ -73,6 +83,9 @@ class ProjectConfig:
     repo: str
     metrics_file: str
     numbers: tuple[NumberConfig, ...]
+    what: str = ""
+    finding: str = ""
+    headline: str = ""
 
 
 @dataclass(frozen=True)
@@ -95,13 +108,50 @@ def load_config(path: Path) -> list[ProjectConfig]:
                 decimals=int(n.get("decimals", 0)),
                 percent=bool(n.get("percent", False)),
                 thousands=bool(n.get("thousands", False)),
+                synthetic=bool(n.get("synthetic", False)),
             )
             for n in p.get("number", [])
         )
+        has_metrics = bool(p.get("metrics", True))
+        if not has_metrics and (numbers or p.get("metrics_file") or p.get("headline")):
+            raise RenderError(
+                f"{p['repo']}: metrics = false, so it may not have a metrics_file, "
+                "a headline or any numbers (ADR 0002)"
+            )
+        if has_metrics and "metrics_file" not in p:
+            raise RenderError(f"{p['repo']}: no metrics_file (or set metrics = false)")
         projects.append(
-            ProjectConfig(repo=p["repo"], metrics_file=p["metrics_file"], numbers=numbers)
+            ProjectConfig(
+                repo=p["repo"],
+                metrics_file=p.get("metrics_file", ""),
+                numbers=numbers,
+                what=p.get("what", ""),
+                finding=p.get("finding", ""),
+                headline=p.get("headline", ""),
+            )
         )
     return projects
+
+
+def table_cell(text: str) -> str:
+    """One Markdown table cell: no pipes and no line breaks inside it."""
+    if "|" in text:
+        raise RenderError(f"table text may not contain '|': {text!r}")
+    return " ".join(text.split())
+
+
+def project_table(config: list[ProjectConfig]) -> str:
+    """The project table, one row per [[project]] entry in config order (ADR 0003)."""
+    lines = [
+        "| Project | What it is | Most interesting finding | Headline number |",
+        "|---|---|---|---|",
+    ]
+    for p in config:
+        link = f"[{p.repo}](https://github.com/{GITHUB_USER}/{p.repo})"
+        headline = p.headline if p.numbers else NO_NUMBER_TEXT
+        cells = [link, table_cell(p.what), table_cell(p.finding), table_cell(headline)]
+        lines.append("| " + " | ".join(cells) + " |")
+    return "\n".join(lines)
 
 
 def split_row(line: str) -> list[str]:
@@ -257,6 +307,8 @@ def render(
     template_text: str, config: list[ProjectConfig], fetcher: Fetcher
 ) -> tuple[str, dict[str, str]]:
     """Fill the template. Returns the rendered text and the commit used per repo."""
+    if TABLE_TOKEN in template_text:
+        template_text = template_text.replace(TABLE_TOKEN, project_table(config))
     used_placeholders = set(PLACEHOLDER_RE.findall(template_text))
     all_numbers = {number.id: (project, number) for project in config for number in project.numbers}
 
@@ -300,6 +352,15 @@ def render(
                 )
             values[number.id] = formatted
 
+    synthetic_ids = {n.id for p in config for n in p.numbers if n.synthetic}
+    for line in template_text.splitlines():
+        ids = set(PLACEHOLDER_RE.findall(line))
+        if ids & synthetic_ids and "synthetic" not in line.lower():
+            raise RenderError(
+                f"{sorted(ids & synthetic_ids)} measured on synthetic data, but the "
+                f"line does not say 'synthetic': {line[:80]!r}"
+            )
+
     rendered = PLACEHOLDER_RE.sub(lambda m: values[m.group(1)], template_text)
     return rendered, sources
 
@@ -315,12 +376,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     template_text = (ROOT / "README.template.md").read_text(encoding="utf-8")
-    config = load_config(ROOT / "projects.toml")
     fetcher: Fetcher = (
         OfflineFetcher(ROOT / "tests" / "fixtures") if args.offline else OnlineFetcher()
     )
 
     try:
+        config = load_config(ROOT / "projects.toml")
         rendered, sources = render(template_text, config, fetcher)
     except RenderError as exc:
         print(f"render failed: {exc}", file=sys.stderr)

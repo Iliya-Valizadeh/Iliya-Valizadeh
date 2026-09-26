@@ -1,35 +1,29 @@
 # Iliya Valizadeh
 
-Third-year Data Science student at York University in Toronto, BSc expected 2028.
-Looking for a Winter 2027 data science or analytics co-op, January to August 2027.
+Data science that shows its work.
 
-Two projects below. Every number in them was produced by code in the repo, and if a
-metric isn't in the code I don't report it.
+I study Data Science (BSc) at York University in Toronto. I'm in my third year and I
+graduate in April 2028. I'm looking for a Winter 2027 data science or analytics co-op.
+I'm not in York's formal co-op stream, but my program allows work terms of up to
+twelve months.
 
-## [bank-filings-rag](https://github.com/Iliya-Valizadeh/bank-filings-rag)
+## Projects
 
-Ask a question about RBC's 2024 Annual Report (250 pages) and get an answer back with
-the page it came from. The text is turned into vectors on my own machine rather than
-sent to a hosted API, and when the pages it pulled don't contain the answer, it says so.
+In the three data projects, every number traces back to the script that made it. Each
+of them also records its design choices and has a page on what is weak. The other two
+repos hold the template and the shared files that make this the default. A script
+fills in the numbers below from each repo's results, and only if its `CLAIMS.md` lists them.
 
-Most of the work went into measuring it. I built a 30-question answer key and compared
-three ways of splitting the report against three ways of searching it, with bootstrap
-intervals and a write-up of every miss. The best setup, whole pages searched by meaning
-and by keyword together, found the right page in the top five for 21 of 30 questions.
-Only {{ bank_filings_rag.n_verified }} of those questions are checked by hand so far, and on those {{ bank_filings_rag.n_verified }} the intervals are
-too wide to rank the setups. The repo says so up front.
+{{ project_table }}
 
-## [credit-risk-scorecard](https://github.com/Iliya-Valizadeh/credit-risk-scorecard)
+## How I work
 
-A credit default model on the public Home Credit dataset, trained on all 307,511
-applications. LightGBM reaches {{ credit_risk_scorecard.lightgbm_roc_auc }} ROC-AUC against {{ credit_risk_scorecard.logreg_roc_auc }} for a logistic regression
-baseline, and a paired bootstrap puts the gap at 0.013 to 0.020.
-
-The model score is the smaller half of it. The class weighting I added made the average
-predicted default rate 40% when the real rate is 8%. Calibrating on held-out data brought
-it to 8.0% and cut the Brier score by 64%. I also took gender out of the model and
-measured what changed. The gap in declines between men and women narrowed but didn't
-close, because other inputs still carry gender, and the repo names them.
+- I now write down how a project will be judged before I see any results. The second-look [evaluation plan](https://github.com/Iliya-Valizadeh/second-look/blob/main/docs/eval_plan.md) was committed before any evaluation code.
+  My two older projects got their plans later, and each plan says so in its title ([example](https://github.com/Iliya-Valizadeh/credit-risk-scorecard/blob/main/docs/eval_plan.md)).
+- Every number has a source. Each data project has a `CLAIMS.md` that links each number to the file and command that made it ([example](https://github.com/Iliya-Valizadeh/credit-risk-scorecard/blob/main/CLAIMS.md)).
+  CI fails when a number in the docs has no row there ([the check](https://github.com/Iliya-Valizadeh/ds-project-standard/blob/main/tools/claims_check.py)).
+- I say what is weak before a reader finds it.
+  Each data project ranks its limits by how much they could change the result ([example](https://github.com/Iliya-Valizadeh/second-look/blob/main/docs/whats_weak.md)).
 
 ## Tools
 
