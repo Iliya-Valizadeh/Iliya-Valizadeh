@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import dataclasses
 import json
 import subprocess
 import sys
@@ -15,10 +16,6 @@ from scripts import render_readme as rr
 
 ROOT = Path(__file__).resolve().parent.parent
 FIXTURES = ROOT / "tests" / "fixtures"
-ROC_AUC_ROW = (
-    "[ROC-AUC](docs/glossary.md#roc-auc) and [PR-AUC](docs/glossary.md#pr-auc) "
-    "by model, with 95% intervals"
-)
 
 
 def real_config() -> list[rr.ProjectConfig]:
@@ -27,6 +24,17 @@ def real_config() -> list[rr.ProjectConfig]:
 
 def real_template() -> str:
     return (ROOT / "README.template.md").read_text(encoding="utf-8")
+
+
+def config_with_number_changed(number_id: str, **changes: Any) -> list[rr.ProjectConfig]:
+    """The real config, with one number entry changed."""
+    out = []
+    for project in real_config():
+        numbers = tuple(
+            dataclasses.replace(n, **changes) if n.id == number_id else n for n in project.numbers
+        )
+        out.append(dataclasses.replace(project, numbers=numbers))
+    return out
 
 
 # --- format_number -----------------------------------------------------------------
@@ -210,6 +218,7 @@ def test_render_matches_committed_readme() -> None:
     assert sources == {
         "credit-risk-scorecard": "35a17fd2454ced157bdab00dc6b0301e67893240",
         "bank-filings-rag": "45246f8af21e907912d5611ccadb9158315255a3",
+        "second-look": "0da821d9af2c15782d4e60abfd54572c1d34d0be",
     }
 
 
@@ -217,20 +226,79 @@ def test_render_skips_a_project_with_no_numbers() -> None:
     """ds-project-standard and .github have no metrics.json, so a repo entry with an
     empty number list must never be fetched (per ADR 0002: they get no number)."""
 
-    class ExplodingForOneRepo(rr.OfflineFetcher):
+    class ExplodingForNoMetricRepos(rr.OfflineFetcher):
         def commit(self, repo: str) -> str:
-            if repo == "ds-project-standard":
+            if repo in {"ds-project-standard", ".github"}:
                 raise AssertionError("should never fetch a commit for a repo with no numbers")
             return super().commit(repo)
 
-    no_numbers = rr.ProjectConfig(
-        repo="ds-project-standard", metrics_file="reports/metrics.json", numbers=()
-    )
-    rendered, sources = rr.render(
-        real_template(), [no_numbers, *real_config()], ExplodingForOneRepo(FIXTURES)
-    )
+    config = real_config()
+    assert {p.repo for p in config if not p.numbers} == {"ds-project-standard", ".github"}
+    rendered, sources = rr.render(real_template(), config, ExplodingForNoMetricRepos(FIXTURES))
     assert rendered == (ROOT / "README.md").read_text(encoding="utf-8")
     assert "ds-project-standard" not in sources
+    assert ".github" not in sources
+    for repo in ("ds-project-standard", ".github"):
+        row = next(line for line in rendered.splitlines() if line.startswith(f"| [{repo}]"))
+        assert row.endswith(f"| {rr.NO_NUMBER_TEXT} |")
+
+
+def test_table_has_one_row_per_project_in_config_order() -> None:
+    rendered, _ = rr.render(real_template(), real_config(), rr.OfflineFetcher(FIXTURES))
+    rows = [line for line in rendered.splitlines() if line.startswith("| [")]
+    assert [row.split("]")[0][3:] for row in rows] == [p.repo for p in real_config()]
+
+
+def test_a_sixth_project_is_one_config_entry(tmp_path: Path) -> None:
+    """ADR 0003: adding a project adds a row, with no change to the template."""
+    extra = tmp_path / "projects.toml"
+    extra.write_text(
+        (ROOT / "projects.toml").read_text(encoding="utf-8")
+        + '\n[[project]]\nrepo = "made-up-repo"\nmetrics = false\n'
+        + 'what = "Made up for this test."\nfinding = "None."\n',
+        encoding="utf-8",
+    )
+    config = rr.load_config(extra)
+    assert len(config) == len(real_config()) + 1
+    rendered, _ = rr.render(real_template(), config, rr.OfflineFetcher(FIXTURES))
+    rows = [line for line in rendered.splitlines() if line.startswith("| [")]
+    assert len(rows) == len(config)
+    assert rows[-1].startswith("| [made-up-repo](https://github.com/Iliya-Valizadeh/made-up-repo)")
+
+
+def test_load_config_refuses_numbers_on_a_repo_with_no_metrics(tmp_path: Path) -> None:
+    bad = tmp_path / "projects.toml"
+    bad.write_text(
+        '[[project]]\nrepo = "x"\nmetrics = false\n'
+        '[[project.number]]\nid = "x.n"\npath = "n"\nrow = "r"\n',
+        encoding="utf-8",
+    )
+    with pytest.raises(rr.RenderError, match="metrics = false"):
+        rr.load_config(bad)
+
+
+def test_load_config_needs_a_metrics_file(tmp_path: Path) -> None:
+    bad = tmp_path / "projects.toml"
+    bad.write_text('[[project]]\nrepo = "x"\n', encoding="utf-8")
+    with pytest.raises(rr.RenderError, match="no metrics_file"):
+        rr.load_config(bad)
+
+
+def test_table_cell_refuses_a_pipe() -> None:
+    with pytest.raises(rr.RenderError, match="may not contain"):
+        rr.table_cell("a | b")
+
+
+def test_render_fails_when_a_synthetic_number_has_no_synthetic_word() -> None:
+    template = real_template() + "\nRecall was {{ second_look.recurring_recall }}.\n"
+    with pytest.raises(rr.RenderError, match="synthetic"):
+        rr.render(template, real_config(), rr.OfflineFetcher(FIXTURES))
+
+
+def test_every_second_look_number_is_marked_synthetic() -> None:
+    second_look = next(p for p in real_config() if p.repo == "second-look")
+    assert second_look.numbers
+    assert all(n.synthetic for n in second_look.numbers)
 
 
 def test_render_is_idempotent() -> None:
@@ -268,49 +336,18 @@ def test_render_fails_on_unused_config_number() -> None:
 
 
 def test_render_fails_when_claims_row_missing() -> None:
-    bad = rr.ProjectConfig(
-        repo="bank-filings-rag",
-        metrics_file="reports/metrics.json",
-        numbers=(
-            rr.NumberConfig(
-                id="bank_filings_rag.n_verified",
-                path="n_questions.verified",
-                row="This row does not exist",
-                decimals=0,
-                percent=False,
-                thousands=False,
-            ),
-        ),
+    config = config_with_number_changed(
+        "bank_filings_rag.n_verified", row="This row does not exist"
     )
-    config = [p for p in real_config() if p.repo != "bank-filings-rag"] + [bad]
     with pytest.raises(rr.RenderError, match="no row"):
         rr.render(real_template(), config, rr.OfflineFetcher(FIXTURES))
 
 
 def test_render_fails_when_source_cell_does_not_cover_path() -> None:
-    bad = rr.ProjectConfig(
-        repo="credit-risk-scorecard",
-        metrics_file="reports/metrics.json",
-        numbers=(
-            rr.NumberConfig(
-                id="credit_risk_scorecard.lightgbm_roc_auc",
-                path="models.lightgbm.roc_auc",
-                row="Retrain trigger (lower bound of test interval)",
-                decimals=3,
-                percent=False,
-                thousands=False,
-            ),
-            rr.NumberConfig(
-                id="credit_risk_scorecard.logreg_roc_auc",
-                path="models.logreg.roc_auc",
-                row=ROC_AUC_ROW,
-                decimals=3,
-                percent=False,
-                thousands=False,
-            ),
-        ),
+    config = config_with_number_changed(
+        "credit_risk_scorecard.lightgbm_roc_auc",
+        row="Retrain trigger (lower bound of test interval)",
     )
-    config = [p for p in real_config() if p.repo != "credit-risk-scorecard"] + [bad]
     with pytest.raises(rr.RenderError, match="does not cover"):
         rr.render(real_template(), config, rr.OfflineFetcher(FIXTURES))
 
