@@ -1,0 +1,52 @@
+# Config for scripts/render_readme.py, per docs/decisions/0001 and 0002.
+#
+# Each [[project]] is one source repo. Each of its [[project.number]] entries is
+# one number README.template.md is allowed to show as "{{ id }}". Before it renders,
+# the script checks that repo's own CLAIMS.md, at the same commit as metrics_file,
+# has a row named `row` that covers `path` and whose Value cell holds the formatted
+# number. If the check fails, nothing is written.
+#
+# The renderer also fails if a number defined here is never used by the template, or
+# if the template uses a placeholder not defined here (ADR 0001).
+#
+# At this stage (the "profile renderer" task) the template still reproduces today's
+# README text exactly, so only the two numbers that text already shows in a form
+# ADR 0002 backs are listed. The rest of today's numbers (the annual report's page
+# count, "21 of 30", the class-weighting percentages, the Brier score cut) have no
+# row that covers them the way they are worded, or aren't the number ADR 0002 picked
+# for this repo, and stay as plain typed text until the content task (ADR 0002,
+# "Today's README has three numbers that no source row backs") rewords them. The
+# five-row project table ADR 0003 describes does not exist in the template yet, so
+# `second-look`, `ds-project-standard` and `.github` have no entry here yet either.
+
+[[project]]
+repo = "credit-risk-scorecard"
+metrics_file = "reports/metrics.json"
+
+[[project.number]]
+id = "credit_risk_scorecard.lightgbm_roc_auc"
+path = "models.lightgbm.roc_auc"
+row = "[ROC-AUC](docs/glossary.md#roc-auc) and [PR-AUC](docs/glossary.md#pr-auc) by model, with 95% intervals"
+decimals = 3
+percent = false
+thousands = false
+
+[[project.number]]
+id = "credit_risk_scorecard.logreg_roc_auc"
+path = "models.logreg.roc_auc"
+row = "[ROC-AUC](docs/glossary.md#roc-auc) and [PR-AUC](docs/glossary.md#pr-auc) by model, with 95% intervals"
+decimals = 3
+percent = false
+thousands = false
+
+[[project]]
+repo = "bank-filings-rag"
+metrics_file = "reports/metrics.json"
+
+[[project.number]]
+id = "bank_filings_rag.n_verified"
+path = "n_questions.verified"
+row = "Hand-checked questions"
+decimals = 0
+percent = false
+thousands = false
