@@ -1,0 +1,78 @@
+name: Sync
+
+on:
+  schedule:
+    # 06:17 UTC, daily. Off the hour, and early enough that a person in Toronto sees
+    # a same-day run if something needs a look.
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Install pinned packages
+        run: uv sync --locked
+
+      - name: Lint and format (ruff)
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Types (mypy)
+        run: uv run mypy
+
+      - name: Tests (pytest, offline)
+        run: uv run pytest
+
+      # Reads each source repo's live reports/metrics.json and CLAIMS.md (ADR 0002),
+      # then writes README.md and data/sources.json only if the rendered text
+      # changed. No key, token or paid API is used to fetch them.
+      - name: Render README.md and data/sources.json from live sources
+        run: uv run python scripts/render_readme.py
+
+      # Same gates CI runs, now checked against the freshly rendered README.md, so a
+      # bad render never reaches main. Any failure here stops the job before the
+      # commit step below, so nothing is committed.
+      - name: Hack the North guard
+        run: uv run pytest tests/test_hack_the_north.py --no-cov
+
+      - name: AI writing signs (zero flags)
+        run: uv run python tools/ai_signs_check.py README.md docs
+
+      - name: Readability (grade 12 or below)
+        run: uv run python tools/readability_check.py README.md docs
+
+      - name: Claims in docs/ trace to a source
+        run: uv run python tools/claims_check.py docs
+
+      - name: Local links
+        run: uv run python tools/links_check.py README.md docs
+
+      - name: Commit README.md and data/sources.json if they changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md data/sources.json
+          if git diff --cached --quiet; then
+            echo "no change to commit"
+          else
+            git commit -m "Sync: re-render README.md from live metrics.json"
+            git push
+          fi

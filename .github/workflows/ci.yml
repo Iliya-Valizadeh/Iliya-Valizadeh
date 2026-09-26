@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: lint, types, tests and docs gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Install pinned packages
+        run: uv sync --locked
+
+      - name: Lint and format (ruff)
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Types (mypy)
+        run: uv run mypy
+
+      - name: Tests (pytest, coverage of scripts/, offline)
+        run: uv run pytest
+
+      # Its own named step per docs/decisions/0004. --no-cov because the suite's
+      # addopts set a coverage floor for the whole of scripts/, which a single test
+      # file can never reach on its own.
+      - name: Hack the North guard
+        run: uv run pytest tests/test_hack_the_north.py --no-cov
+
+      - name: AI writing signs (zero flags)
+        run: uv run python tools/ai_signs_check.py README.md docs
+
+      - name: Readability (grade 12 or below)
+        run: uv run python tools/readability_check.py README.md docs
+
+      # ADR 0002/0004's "numbers" gate: render_readme.py already does the row and
+      # value matching against each source repo's own CLAIMS.md while it renders, and
+      # --check does that without writing anything.
+      - name: Numbers on the profile trace to their source repos (ADR 0002)
+        run: uv run python scripts/render_readme.py --check
+
+      - name: Claims in docs/ trace to a source
+        run: uv run python tools/claims_check.py docs
+
+      - name: Local links
+        run: uv run python tools/links_check.py README.md docs
+
+  web-links:
+    name: link check (lychee)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Web link check (lychee)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --config tools/lychee.toml './**/*.md'
+          fail: true
