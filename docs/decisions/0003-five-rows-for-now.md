@@ -6,7 +6,7 @@ Date: 2026-09-26. Status: accepted.
 
 The portfolio plan (section `5.6`) asks for a table of the six pinned projects. Only
 five of them exist today: `credit-risk-scorecard`, `bank-filings-rag`, `second-look`,
-`ds-project-standard` and `.github`. The sixth, `fraud-review-queue`, is Phase C of the
+`ds-project-standard` and `.github`. The sixth project is Phase C of the
 plan. Phase C has not started, because it needs a Kaggle key that only Iliya can set
 up. The profile must not suggest that a project exists before it does.
 
@@ -26,9 +26,9 @@ Option 3. The table in the template is a loop over the `[[project]]` entries in
 fixed count and no empty slot.
 
 The table has five rows for now. The plan's "six pinned projects" becomes five until
-Phase C ships `fraud-review-queue`. There is no row, placeholder, "coming soon" text
-or number for `fraud-review-queue` anywhere in the config, template or README. Its
-name appears only in decision records like this one.
+Phase C ships the sixth project. There is no row, placeholder, "coming soon" text
+or number for the sixth project anywhere in the config, template or README. Its
+name appears nowhere on the profile.
 
 When Phase C is done, adding it takes one new `[[project]]` entry in `projects.toml`
 (with its number entries, if its `reports/metrics.json` exists), plus fixture copies
@@ -42,5 +42,5 @@ appears with no change to the template.
 
 - Nothing on the profile describes work that has not been done.
 - Adding a project is a config change, not a template change.
-- The review task at the end of this phase greps the README, template and config for
-  `fraud-review-queue` and expects no match.
+- The review task at the end of this phase checks the README, template and config for
+  any trace of the sixth project and expects none.
