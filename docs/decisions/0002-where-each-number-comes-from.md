@@ -93,5 +93,5 @@ content task drops or rewords them. It does not compute them.
   `scripts/`. The site repo copies them and records this repo's commit, so the site
   and the profile follow one rule.
 - Offline tests use copies of the source files from these commits, recorded in
-  `tests/fixtures/SOURCES.md`: `credit-risk-scorecard` at `35a17fd`, `bank-filings-rag`
-  at `45246f8`, `second-look` at `0da821d`.
+  `tests/fixtures/SOURCES.md`: `credit-risk-scorecard` at `d83dae6`, `bank-filings-rag`
+  at `9103d17`, `second-look` at `df69f49`.

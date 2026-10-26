@@ -395,6 +395,11 @@ def main(argv: list[str] | None = None) -> int:
     sources_text = json.dumps(sources, indent=2, sort_keys=True) + "\n"
     current_sources = sources_path.read_text(encoding="utf-8") if sources_path.is_file() else None
     sources_changed = current_sources != sources_text
+    if args.offline:
+        # The fixtures pin older commits than each source repo's main, so an offline
+        # render can never reproduce the live commit list. Offline mode answers one
+        # question only: does README.md come out byte for byte the same?
+        sources_changed = False
 
     if args.check:
         if readme_changed or sources_changed:
@@ -422,7 +427,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         print("README.md already up to date, not written")
 
-    if sources_changed:
+    if sources_changed and not args.offline:
         sources_path.parent.mkdir(parents=True, exist_ok=True)
         sources_path.write_text(sources_text, encoding="utf-8", newline="\n")
         print("wrote data/sources.json")
