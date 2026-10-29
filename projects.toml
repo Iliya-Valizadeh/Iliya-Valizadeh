@@ -208,7 +208,7 @@ repo = ".github"
 metrics = false
 what = """
 Shared issue forms, a pull request checklist and a security policy. GitHub uses them
-for any of my repos that has no copy of its own.
+for any repo of mine that has no copy of its own.
 """
 finding = """
 GitHub does not share a license from this repo the way it shares the forms, so each
