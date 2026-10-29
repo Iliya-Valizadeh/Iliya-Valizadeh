@@ -3,9 +3,9 @@
 Data science that shows its work.
 
 I study Data Science (BSc) at York University in Toronto. I'm in my third year and I
-graduate in April 2028. I'm looking for a Winter 2027 data science or analytics co-op.
-I'm not in York's formal co-op stream, but my program allows work terms of up to
-twelve months.
+graduate in April 2028. I'm in York's co-op program and looking for a Winter 2027 co-op
+(4, 8 or 12 months) or a Summer 2027 internship in data engineering, data science or
+analytics.
 
 ## Projects
 

@@ -3,9 +3,9 @@
 Data science that shows its work.
 
 I study Data Science (BSc) at York University in Toronto. I'm in my third year and I
-graduate in April 2028. I'm looking for a Winter 2027 data science or analytics co-op.
-I'm not in York's formal co-op stream, but my program allows work terms of up to
-twelve months.
+graduate in April 2028. I'm in York's co-op program and looking for a Winter 2027 co-op
+(4, 8 or 12 months) or a Summer 2027 internship in data engineering, data science or
+analytics.
 
 ## Projects
 
@@ -20,7 +20,7 @@ fills in the numbers below from each repo's results, and only if its `CLAIMS.md`
 | [bank-filings-rag](https://github.com/Iliya-Valizadeh/bank-filings-rag) | Answers questions about RBC's 2024 Annual Report and names the page each answer came from. The text is turned into vectors on my own machine, not sent to a hosted service. | The model that turns text into vectors reads only the start of each page, and most pages are much longer than that. So search by meaning over whole pages mostly sees the top of each page. A model that reads more could change which setup wins. | How often the right page is in the top five ([hit@5](https://github.com/Iliya-Valizadeh/bank-filings-rag/blob/main/docs/glossary.md#hit5)): 0.58 (95% interval 0.33 to 0.83) on 12 hand-checked questions, against 0.25 (0.00 to 0.50) for fixed-size chunks. The intervals overlap, so no setup clearly wins yet |
 | [second-look](https://github.com/Iliya-Valizadeh/second-look) | Reads a bank or card statement in your browser and flags charges worth a second look: subscriptions, price rises, double charges and odd spending. Each flag comes with one plain sentence. | It failed the bar I set before I saw any result. After two fixes, two checks still fall short, including the share of recurring flags that are right. The repo reports that instead of moving the bar. | Share of planted recurring charges it finds ([recall](https://github.com/Iliya-Valizadeh/second-look/blob/main/docs/glossary.md#recall)), on synthetic statements only: 0.9588 (95% interval 0.9467 to 0.9695), against 0.7772 for a simple baseline |
 | [ds-project-standard](https://github.com/Iliya-Valizadeh/ds-project-standard) | A Copier template that gives each new data science repo the same docs, tests and CI checks. A build stops when a number has no source, a page is hard to read, or a link is broken. | It scores itself zero overall on the ML Test Score, a published checklist of how ready a system is for real use. The score page says why. | None. It holds rules and templates, not a model |
-| [.github](https://github.com/Iliya-Valizadeh/.github) | Shared issue forms, a pull request checklist and a security policy. GitHub uses them for any of my repos that has no copy of its own. | GitHub does not share a license from this repo the way it shares the forms, so each repo keeps its own license file. | None. It holds rules and templates, not a model |
+| [.github](https://github.com/Iliya-Valizadeh/.github) | Shared issue forms, a pull request checklist and a security policy. GitHub uses them for any repo of mine that has no copy of its own. | GitHub does not share a license from this repo the way it shares the forms, so each repo keeps its own license file. | None. It holds rules and templates, not a model |
 
 ## How I work
 
