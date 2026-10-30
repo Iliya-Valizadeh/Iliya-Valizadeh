@@ -7,8 +7,8 @@ Date: 2026-09-26. Status: accepted.
 The portfolio plan (section `5.6`) asks for a table of the six pinned projects. Only
 five of them exist today: `credit-risk-scorecard`, `bank-filings-rag`, `second-look`,
 `ds-project-standard` and `.github`. The sixth project is Phase C of the
-plan. Phase C has not started, because it needs a Kaggle key that only Iliya can set
-up. The profile must not suggest that a project exists before it does.
+plan. Phase C has not started, because it needs a Kaggle key that I have not set up
+yet. The profile must not suggest that a project exists before it does.
 
 ## Options
 
@@ -42,5 +42,5 @@ appears with no change to the template.
 
 - Nothing on the profile describes work that has not been done.
 - Adding a project is a config change, not a template change.
-- The review task at the end of this phase checks the README, template and config for
-  any trace of the sixth project and expects none.
+- Before this phase ends, I check the README, template and config for any trace of
+  the sixth project and expect none.
