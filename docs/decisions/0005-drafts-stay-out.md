@@ -4,17 +4,16 @@ Date: 2026-09-26. Status: accepted.
 
 ## Context
 
-Text that Iliya will publish in his own voice starts with the line
-`DRAFT: Iliya to edit` and stays unpublished until he removes that line himself. The
-profile has a Notes section that links to notes on the site. The notes are drafts
-until he edits them. The same rule has to hold for any section of the README template
-that is written for him but not yet read by him.
+A note I am still writing starts with the line `DRAFT: Iliya to edit` and stays
+unpublished until I remove that line. The profile has a Notes section that links to
+notes on the site. The notes are drafts until I finish them. The same rule has to hold
+for any section of the README template that I have not finished.
 
 ## Options
 
 1. Keep drafts on a separate branch. Easy to forget, and the sync workflow runs only
    on `main`.
-2. Let the author remember to leave drafts out. Nothing checks it.
+2. Remember to leave drafts out by hand. Nothing checks it.
 3. Have the renderer drop anything marked as a draft, and fail if the marker reaches
    the output.
 
@@ -51,7 +50,7 @@ Fail-closed checks:
 
 ## Consequences
 
-- Iliya publishes a note by deleting one line in the site repo. The profile picks it up
+- I publish a note by deleting one line in the site repo. The profile picks it up
   on the next daily sync.
 - The profile README itself is not marked as a draft. It goes live when this phase is
-  merged. The review task adds a "Needs Iliya" item asking him to read it first.
+  merged, so I read it in full before the merge.

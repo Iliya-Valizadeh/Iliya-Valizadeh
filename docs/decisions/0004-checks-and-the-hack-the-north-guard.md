@@ -90,8 +90,8 @@ and on a fresh offline render:
 The line number of the Hack the North line is not checked, because the content above
 the block will change in this phase. Its place is fixed by rule 4 instead.
 
-On top of the test, any task that commits a change to the README or its template also
-compares the line with the one at `fe5d040` by hand before it commits.
+On top of the test, whenever I commit a change to the README or its template, I also
+compare the line with the one at `fe5d040` by hand before I commit.
 
 ## Consequences
 
