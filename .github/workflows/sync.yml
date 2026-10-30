@@ -51,8 +51,8 @@ jobs:
       - name: Hack the North guard
         run: uv run pytest tests/test_hack_the_north.py --no-cov
 
-      - name: AI writing signs (zero flags)
-        run: uv run python tools/ai_signs_check.py README.md docs
+      - name: Writing style (zero flags)
+        run: uv run python tools/writing_style_check.py README.md docs
 
       - name: Readability (grade 12 or below)
         run: uv run python tools/readability_check.py README.md docs
