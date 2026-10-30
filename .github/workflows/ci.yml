@@ -39,7 +39,7 @@ jobs:
       - name: Hack the North guard
         run: uv run pytest tests/test_hack_the_north.py --no-cov
 
-      - name: Writing-style check (zero flags)
+      - name: Writing style (zero flags)
         run: uv run python tools/writing_style_check.py README.md docs
 
       - name: Readability (grade 12 or below)
