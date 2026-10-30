@@ -76,11 +76,11 @@ Special rules:
   uses the number rules of `tools/claims_check.py` (years, dates and whole numbers up
   to ten are skipped). A typed number fails the build.
 - A number with no `CLAIMS.md` row in its own repo is left out of the profile and
-  logged in `_portfolio/STATUS.md`. This phase adds no rows to other repos.
+  noted on my to-do list. This phase adds no rows to other repos.
 
 Today's README has three numbers that no source row backs: the page count of the
-annual report, the `21 of 30` count, and the Brier score cut given as a percent. The
-content task drops or rewords them. It does not compute them.
+annual report, the `21 of 30` count, and the Brier score cut given as a percent. I
+drop or reword them in the new text. I do not compute them.
 
 ## Consequences
 
