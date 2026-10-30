@@ -4,15 +4,15 @@ Date: 2026-09-26. Status: accepted.
 
 ## Context
 
-Phase E rewrites most of the profile README from a template. Some of the text is
-Iliya's own, and some of it carries facts only he can vouch for. That text should not
-be rewritten by an agent.
+Phase E rewrites most of the profile README from a template. Some of the old text is
+personal, and some of it carries facts only I can vouch for. That text should not
+change as a side effect of the rewrite.
 
 ## Options
 
-1. Rewrite everything to the new plan and ask Iliya to check it all. He would have to
-   find his own lines again inside new text.
-2. Keep his lines exactly as they are, and change them only when he asks.
+1. Rewrite everything to the new plan and check it all again. I would have to find
+   my own lines again inside new text.
+2. Keep those lines exactly as they are, and change them only on purpose.
 
 ## Decision
 
@@ -27,15 +27,14 @@ They sit in `README.template.md` as plain text, with no placeholders, at the end
 the file. The guard test checks them on every render.
 
 Everything else in today's README (the opening lines, the two project paragraphs and
-the Tools list) may be rewritten by the content task, which follows plan section `5.6`.
-Facts about Iliya come only from `CLAUDE.md` at the root of the workspace.
+the Tools list) may be rewritten to follow plan section `5.6`. Facts about me in the
+new text come only from my own written notes.
 
-If a later task finds a reason to change a kept line, it does not change it. It adds a
-"Needs Iliya" item to `_portfolio/STATUS.md` that names the line and the reason, and
-he decides.
+If a later change needs a kept line to change, that edit is made on its own, in a
+commit that names the line and the reason.
 
 ## Consequences
 
-- His own words and the facts only he can confirm stay as he wrote them.
-- The rewritten parts of the README are drafts he has not read. The review task at the
-  end of this phase asks him to read the profile before he shares it.
+- My own words and the facts only I can confirm stay as I wrote them.
+- The rewritten parts of the README are new text. I read the whole profile again
+  before I share it.

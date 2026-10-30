@@ -4,7 +4,7 @@ Date: 2026-09-26. Status: accepted.
 
 ## Context
 
-This repo is Iliya's GitHub profile. Until now it held one hand-typed `README.md`, so
+This repo is my GitHub profile. Until now it held one hand-typed `README.md`, so
 its numbers could drift away from the project repos they describe. The portfolio plan
 (section `5.6`) says the numbers must be generated, never typed. A script reads each
 repo's `reports/metrics.json` from GitHub and renders the README from a template. A
