@@ -93,5 +93,5 @@ drop or reword them in the new text. I do not compute them.
   `scripts/`. The site repo copies them and records this repo's commit, so the site
   and the profile follow one rule.
 - Offline tests use copies of the source files from these commits, recorded in
-  `tests/fixtures/SOURCES.md`: `credit-risk-scorecard` at `d83dae6`, `bank-filings-rag`
-  at `9103d17`, `second-look` at `df69f49`.
+  `tests/fixtures/SOURCES.md`: `credit-risk-scorecard` at `b963859`, `bank-filings-rag`
+  at `2225483`, `second-look` at `4a53ecf`.

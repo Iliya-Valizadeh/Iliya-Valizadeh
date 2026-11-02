@@ -9,7 +9,7 @@ in `ds-project-standard/tools`. This repo is not a data science project, so part
 the house standard do not fit it. It has neither a model nor a dataset, and its README
 has no "Try it" section.
 
-One line of the README has a hard rule. At commit `fe5d040`, the README ends with an
+One line of the README has a hard rule. At commit `889f2bd`, the README ends with an
 "Also" block: the `## Also` heading, three short lines, and the contact line (lines
 `39` to `45` of that file). The first of the three short lines, line `41`, is the one
 about Hack the North. That line and the block around it must never change, move or be
@@ -38,7 +38,7 @@ For the guard:
 ## Decision
 
 Checkers: option 3. These files are copied byte for byte from `ds-project-standard`
-at commit `338cfd4ce69dd72aac64ed366678f6a3c10e7d81`: `tools/_markdown.py`,
+at commit `f6434efe38b629f0ab711c1261fa290ee3a1f4cf`: `tools/_markdown.py`,
 `tools/writing_style_check.py`, `tools/readability_check.py`, `tools/claims_check.py`,
 `tools/links_check.py` and `tools/lychee.toml`. `tools/readme_sections.py` is not
 copied, because the profile does not use the project README layout.
@@ -81,7 +81,7 @@ and on a fresh offline render:
 3. The "Also" block, lines `39` to `45` of the fixture, appears once as one unbroken
    run, byte for byte. Its SHA-256, with a newline after each line, is
    `ee0af9367052ab40a4575f4c77727eb007b4eec5e3de25dc25027805f3dd9bf7`.
-4. The file ends with that block and one newline, as it does at `fe5d040`. So the
+4. The file ends with that block and one newline, as it does at `889f2bd`. So the
    block cannot move up the page.
 5. The regular expression `hack\W*the\W*north`, ignoring case, matches exactly once.
    So nothing about it is added anywhere else in the file. The same expression must
@@ -91,7 +91,7 @@ The line number of the Hack the North line is not checked, because the content a
 the block will change in this phase. Its place is fixed by rule 4 instead.
 
 On top of the test, whenever I commit a change to the README or its template, I also
-compare the line with the one at `fe5d040` by hand before I commit.
+compare the line with the one at `889f2bd` by hand before I commit.
 
 ## Consequences
 

@@ -16,7 +16,7 @@ change as a side effect of the rewrite.
 
 ## Decision
 
-Option 2. These parts of the README at commit `fe5d040` are kept byte for byte:
+Option 2. These parts of the README at commit `889f2bd` are kept byte for byte:
 
 - The "Also" block: the `## Also` heading and its three lines. This includes the Hack
   the North line, which is also covered by the guard in

@@ -17,7 +17,7 @@ repo's numbers, as [ADR 0003](0003-five-rows-for-now.md) asks. A repo entry with
 `second-look` carry `synthetic = true`, and the render fails if one sits on a line
 without the word "synthetic", as [ADR 0002](0002-where-each-number-comes-from.md) asks.
 
-The "Also" block stays on the same lines as in commit `fe5d040`: the heading on line
+The "Also" block stays on the same lines as in commit `889f2bd`: the heading on line
 `39` and the Hack the North line on line `41`. The text above it was fitted to that
 length, so the block did not move at all. A later edit that changes the length of the
 text above the block should keep it there too, or move it on purpose.
