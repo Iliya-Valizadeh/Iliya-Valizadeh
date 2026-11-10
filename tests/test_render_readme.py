@@ -184,8 +184,8 @@ def test_parse_claims_table_on_real_fixtures() -> None:
 
 def test_offline_fetcher_reads_recorded_commits() -> None:
     fetcher = rr.OfflineFetcher(FIXTURES)
-    assert fetcher.commit("credit-risk-scorecard") == "d83dae659e3a01e20838c3ae848be0909931d663"
-    assert fetcher.commit("bank-filings-rag") == "9103d17603b09cb94130612bd258a15f647c7ff4"
+    assert fetcher.commit("credit-risk-scorecard") == "b9638595eb94b93c7fe4db22bb21b02a63ee22bf"
+    assert fetcher.commit("bank-filings-rag") == "222548390393096b31dfd77963a46e7f404db62f"
 
 
 def test_offline_fetcher_unknown_repo() -> None:
@@ -216,9 +216,9 @@ def test_render_matches_committed_readme() -> None:
     committed = (ROOT / "README.md").read_text(encoding="utf-8")
     assert rendered == committed
     assert sources == {
-        "credit-risk-scorecard": "d83dae659e3a01e20838c3ae848be0909931d663",
-        "bank-filings-rag": "9103d17603b09cb94130612bd258a15f647c7ff4",
-        "second-look": "df69f49a4aef1d186c722f11f31f8b038ce95514",
+        "credit-risk-scorecard": "b9638595eb94b93c7fe4db22bb21b02a63ee22bf",
+        "bank-filings-rag": "222548390393096b31dfd77963a46e7f404db62f",
+        "second-look": "4a53ecf4e571e75b2d538ce76fb81f5d1a571e99",
     }
 
 
